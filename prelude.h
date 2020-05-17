@@ -1,4 +1,5 @@
-#pragma once
+#ifndef JFG_PRELUDE_H
+#define JFG_PRELUDE_H
 
 #include <stdint.h>
 
@@ -51,9 +52,12 @@ struct m3x2
 
 #define ARRAY_SIZE(xs) (sizeof(xs)/sizeof(xs[0]))
 #define OFFSET_OF(struct_type, member) ((size_t)(&((struct_type*)0)->member))
+#define STATIC_ASSERT(COND, MSG) typedef u8 static_assertion_##MSG[(COND) ? 1 : -1]
 
 #ifdef LIBRARY
 	#define LIBRARY_EXPORT extern "C" __declspec(dllexport)
 #else
 	#define LIBRARY_EXPORT
+#endif
+
 #endif

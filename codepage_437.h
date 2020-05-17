@@ -1,5 +1,5 @@
-#ifndef TEXTURE_CODEPAGE_437_H
-#define TEXTURE_CODEPAGE_437_H
+#ifndef JFG_TEXTURE_CODEPAGE_437_H
+#define JFG_TEXTURE_CODEPAGE_437_H
 
 #include "prelude.h"
 
