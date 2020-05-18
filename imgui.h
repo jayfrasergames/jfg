@@ -64,6 +64,7 @@ void imgui_text(IMGUI_Context* context, char* text)
 		}
 	}
 	context->text_index = index;
+	context->text_pos.y += pos.y - context->text_pos.y + 1;
 }
 #endif
 
