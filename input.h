@@ -11,8 +11,7 @@ enum Input_Event_Type
 struct Input_Event
 {
 	Input_Event_Type type;
-	union
-	{
+	union {
 		struct {
 			i32 dx, dy;
 		} mouse_move;
