@@ -22,6 +22,12 @@ struct v2
 	union { f32 y, h; };
 };
 
+struct v2_u8
+{
+	union { u8 x, w; };
+	union { u8 y, h; };
+};
+
 struct v3
 {
 	f32 x, y, z;
