@@ -86,8 +86,9 @@ struct IMGUI_D3D11_Context
 // TODO -- give this an error logger(?)
 u8 imgui_d3d11_init(IMGUI_D3D11_Context* context, ID3D11Device* device);
 void imgui_d3d11_draw(
-	IMGUI_D3D11_Context*    context,
-	ID3D11DeviceContext*    d3d11_context,
+	IMGUI_Context*          imgui,
+	IMGUI_D3D11_Context*    imgui_d3d11,
+	ID3D11DeviceContext*    d3d11,
 	ID3D11RenderTargetView* output_rtv,
 	v2_u32                  output_view_dimensions);
 

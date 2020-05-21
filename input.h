@@ -22,6 +22,7 @@ struct Input_Event
 
 struct Input
 {
+	v2_u32 mouse_pos;
 	u32 len;
 	Input_Event event[MAX_INPUT_EVENTS];
 };
