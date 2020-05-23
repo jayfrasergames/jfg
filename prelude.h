@@ -16,17 +16,19 @@ typedef int64_t i64;
 typedef float  f32;
 typedef double f64;
 
-struct v2
-{
-	union { f32 x, w; };
-	union { f32 y, h; };
-};
+#define V2(Type) \
+	struct v2_##Type \
+	{ \
+		union { Type x, w; }; \
+		union { Type y, h; }; \
+	};
 
-struct v2_u8
-{
-	union { u8 x, w; };
-	union { u8 y, h; };
-};
+V2(f32); V2(u8); V2(u16); V2(u32); V2(u64);
+V2(f64); V2(i8); V2(i16); V2(i32); V2(i64);
+
+#undef V2
+
+typedef v2_f32 v2;
 
 struct v3
 {
@@ -41,11 +43,6 @@ struct v4
 	union { f32 w, a; };
 };
 
-struct v2_u32
-{
-	union { u32 x; u32 w; };
-	union { u32 y; u32 h; };
-};
 
 struct m3x2
 {
