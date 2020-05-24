@@ -2,6 +2,7 @@
 #define JFG_PRELUDE_H
 
 #include <stdint.h>
+#include <assert.h>
 
 typedef uint8_t  u8;
 typedef uint16_t u16;
@@ -53,6 +54,7 @@ struct m3x2
 	};
 };
 
+#define ASSERT(expr) assert(expr)
 #define ARRAY_SIZE(xs) (sizeof(xs)/sizeof(xs[0]))
 #define OFFSET_OF(struct_type, member) ((size_t)(&((struct_type*)0)->member))
 #define STATIC_ASSERT(COND, MSG) typedef u8 static_assertion_##MSG[(COND) ? 1 : -1]

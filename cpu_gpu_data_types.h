@@ -27,8 +27,13 @@
 
 	#define U1 u32
 	#define U2 v2_u32
+	#define U3 v3_u32
+	#define U4 v4_u32
 
-	#define I32 i32
+	#define I1 i32
+	#define I2 v2_i32
+	#define I3 v3_i32
+	#define I4 v4_i32
 
 #endif
 
