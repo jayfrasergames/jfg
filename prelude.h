@@ -36,14 +36,21 @@ struct v3
 	f32 x, y, z;
 };
 
-struct v4
-{
-	union { f32 x, r; };
-	union { f32 y, g; };
-	union { f32 z, b; };
-	union { f32 w, a; };
-};
+#define V4(Type) \
+	struct v4_##Type \
+	{ \
+		union { Type x, r; }; \
+		union { Type y, g; }; \
+		union { Type z, b; }; \
+		union { Type w, a; }; \
+	};
 
+V4(f32); V4(u8); V4(u16); V4(u32); V4(u64);
+V4(f64); V4(i8); V4(i16); V4(i32); V4(i64);
+
+#undef V4
+
+typedef v4_f32 v4;
 
 struct m3x2
 {

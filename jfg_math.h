@@ -1,6 +1,8 @@
 #ifndef JFG_MATH_H
 #define JFG_MATH_H
 
+#include <math.h>
+
 #define MAKE_MIN_MAX_FUNCTIONS(Type) \
 	static inline Type min_##Type(Type a, Type b) \
 	{ \
