@@ -68,6 +68,9 @@ void imgui_text(IMGUI_Context* context, char* text)
 	u32 index = context->text_index;
 	IMGUI_VS_Text_Instance *cur_char = &context->text_buffer[index];
 	for (u8 *p = (u8*)text; *p; ++p) {
+		if (index == IMGUI_MAX_TEXT_CHARACTERS) {
+			break;
+		}
 		u8 c = *p;
 		switch (c) {
 		case '\n':
@@ -91,6 +94,7 @@ void imgui_text(IMGUI_Context* context, char* text)
 			break;
 		}
 	}
+	ASSERT(index <= IMGUI_MAX_TEXT_CHARACTERS);
 	context->text_index = index;
 	context->text_pos.y += pos.y - context->text_pos.y + 1;
 }
