@@ -20,4 +20,12 @@ MAKE_MIN_MAX_FUNCTIONS(u32)
 
 #undef MAKE_MIN_MAX_FUNCTIONS
 
+static inline f32 lerp(f32 start, f32 end, f32 weight) {
+	return start + (end - start) * weight;
+}
+
+static inline f32 clamp(f32 low, f32 high, f32 val) {
+	return min(max(low, val), high);
+}
+
 #endif

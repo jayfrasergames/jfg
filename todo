@@ -1,0 +1,44 @@
+* prelude
+  * types
+    uptr, iptr
+    u8, u16, u32, u64
+    i8, i16, i32, i64
+    f32, f64 (f16?)
+
+    v2_u8, v2_u16, ..., v2_f64
+    v2 (== v2_f32)
+    v3_u8, v3_u16, ..., v3_f64
+    v3 (== v3_f32)
+    v4_u8, v4_u16, ..., v4_f64
+    v4 (== v4_f32)
+
+    m2x2 ...?
+
+* math
+  * types
+    complex:
+      cu8, cu16, cu32, cu64
+      ci8, ci16, ci32, ci64,
+      cf32, cf64 (cf16?)
+
+      v2_cu8, v2_cu16, ..., v2_cf64
+      v3_cu8, v3_cu16, ..., v3_cf64
+      v4_cu8, v4_cu16, ..., v4_cf64
+
+    quaternion:
+
+      qu8, qu16, ..., v4_qu64 (?)
+
+  * functions
+
+    sin, cos, tan, asin, acos, atan,
+    atan2
+    (fast_sin, fast_cos, ...?)
+    sqrt, pow, lerp, clamp, min, max, floor, ceil, round, fmod, smoothstep(?)
+
+* SIMD
+  * types
+
+    f32_x4
+    v2_x4, v3_x4, v4_x4
+    etc

@@ -58,6 +58,13 @@ struct Input
 	Input_Button_Frame_Data button_data[NUM_INPUT_BUTTONS];
 	u32         len;
 	Input_Event event[INPUT_MAX_EVENTS];
+
+	u32 num_presses(Input_Button button)
+	{
+		u32 num_presses = button_data[button].num_transitions
+		                + (1 - (button_data[button].flags & INPUT_BUTTON_FLAG_ENDED_DOWN));
+		return num_presses / 2;
+	}
 };
 
 void input_reset(Input* input);
