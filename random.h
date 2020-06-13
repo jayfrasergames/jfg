@@ -11,17 +11,20 @@ struct MT19937
 	void seed(u32 seed);
 	u32  rand_u32();
 	f32  rand_f32();
+	f32  uniform_f32(f32 start, f32 end);
 	void set_current();
 };
 
 extern thread_local u32 (*rand_u32)();
 extern thread_local f32 (*rand_f32)();
+extern thread_local f32 (*uniform_f32)(f32 start, f32 end);
 
 #ifndef JFG_HEADER_ONLY
 
 static thread_local void *random_cur_state = NULL;
 thread_local u32 (*rand_u32)() = NULL;
 thread_local f32 (*rand_f32)() = NULL;
+thread_local f32 (*uniform_f32)(f32 start, f32 end) = NULL;
 
 static u32 mt19937_rand_u32()
 {
@@ -37,11 +40,19 @@ static f32 mt19937_rand_f32()
 	return rand->rand_f32();
 }
 
+static f32 mt19937_uniform_f32(f32 start, f32 end)
+{
+	ASSERT(random_cur_state);
+	MT19937 *rand = (MT19937*)random_cur_state;
+	return rand->uniform_f32(start, end);
+}
+
 void MT19937::set_current()
 {
 	random_cur_state = this;
 	::rand_u32 = mt19937_rand_u32;
 	::rand_f32 = mt19937_rand_f32;
+	::uniform_f32 = mt19937_uniform_f32;
 }
 
 static void mt19937_twist(MT19937* mt19937)
@@ -100,6 +111,10 @@ f32 MT19937::rand_f32()
 	return (f32)r / (f32)(u32)-1;
 }
 
+f32 MT19937::uniform_f32(f32 start, f32 end)
+{
+	return start + (end - start)*rand_f32();
+}
 
 #endif
 
