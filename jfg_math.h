@@ -25,6 +25,10 @@ static inline f32 lerp(f32 start, f32 end, f32 weight) {
 	return start + (end - start) * weight;
 }
 
+static inline v2 lerp(v2 start, v2 end, f32 weight) {
+	return start + (end - start) * weight;
+}
+
 static inline f32 clamp(f32 low, f32 high, f32 val) {
 	return min(max(low, val), high);
 }

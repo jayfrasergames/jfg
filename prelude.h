@@ -186,6 +186,10 @@ VEC_TYPES
 	v2_##type operator/(v2_##type v, type s) \
 	{ \
 		return V2_##type(v.x / s, v.y / s); \
+	} \
+	bool operator==(v2_##type a, v2_##type b) \
+	{ \
+		return a.x == b.x && a.y == b.y; \
 	}
 VEC_TYPES
 #undef VEC_TYPE
