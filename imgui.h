@@ -2,9 +2,12 @@
 #define JFG_IMGUI_H
 
 #include "prelude.h"
+#include "containers.hpp"
 #include "imgui_gpu_data_types.h"
 // XXX - needed for memset, should remove this later
 #include <string.h>
+#include <stdio.h>
+#include "input.h"
 
 #ifdef JFG_D3D11_H
 
@@ -27,13 +30,30 @@ struct IMGUI_D3D11_Context
 #endif
 
 #define IMGUI_MAX_TEXT_CHARACTERS 4096
+#define IMGUI_MAX_ELEMENTS 4096
+
+struct IMGUI_Element_State
+{
+	uptr id;
+	union {
+		struct {
+			u8 collapsed;
+		} tree_begin;
+	};
+};
 
 struct IMGUI_Context
 {
 	v2 text_pos;
 	v4 text_color;
 	u32 text_index;
+	u32 tree_indent_level;
+	Input* input;
+	v2_u32 screen_size;
 	IMGUI_VS_Text_Instance text_buffer[IMGUI_MAX_TEXT_CHARACTERS];
+
+	Max_Length_Array<IMGUI_Element_State, IMGUI_MAX_ELEMENTS> element_states;
+
 #ifdef IMGUI_DEFINE_GFX
 	union {
 	#ifdef JFG_D3D11_H
@@ -43,16 +63,24 @@ struct IMGUI_Context
 #endif
 };
 
-void imgui_begin(IMGUI_Context* context);
+void imgui_begin(IMGUI_Context* context, Input* input, v2_u32 screen_size);
 void imgui_set_text_cursor(IMGUI_Context* context, v4 color, v2 pos);
 void imgui_text(IMGUI_Context* context, char* text);
+u8   imgui_tree_begin(IMGUI_Context* context, char* name);
+void imgui_tree_end(IMGUI_Context* context);
+void imgui_f32(IMGUI_Context* context, char* name);
 
 #ifndef JFG_HEADER_ONLY
-void imgui_begin(IMGUI_Context* context)
+#include "codepage_437.h"
+
+void imgui_begin(IMGUI_Context* context, Input* input, v2_u32 screen_size)
 {
 	context->text_pos = { 0.0f, 0.0f };
 	context->text_color = { 0.0f, 0.0f, 0.0f, 0.0f };
 	context->text_index = 0;
+	context->tree_indent_level = 0;
+	context->input = input;
+	context->screen_size = screen_size;
 }
 
 void imgui_set_text_cursor(IMGUI_Context* context, v4 color, v2 pos)
@@ -98,6 +126,102 @@ void imgui_text(IMGUI_Context* context, char* text)
 	context->text_index = index;
 	context->text_pos.y += pos.y - context->text_pos.y + 1;
 }
+
+u8 imgui_tree_begin(IMGUI_Context* context, char* name)
+{
+	u32 name_len = 2; // 2 chars for prefix
+	for (char *p = name; *p; ++p) {
+		++name_len;
+	}
+	v2 glyph_size = 2.0f * V2_f32(TEXTURE_CODEPAGE_437.glyph_width,
+	                              TEXTURE_CODEPAGE_437.glyph_height);
+	v2 top_left = context->text_pos * glyph_size;
+	v2 bottom_right = (context->text_pos + V2_f32(name_len, 1)) * glyph_size;
+
+	v4_f32 color = context->text_color;
+
+	v2 mouse_pos = (v2)context->input->mouse_pos;
+	u8 mouse_over_element = mouse_pos.x > top_left.x && mouse_pos.x < bottom_right.x
+                             && mouse_pos.y > top_left.y && mouse_pos.y < bottom_right.y;
+	u32 mouse_pressed = input_get_num_down_transitions(context->input, INPUT_BUTTON_MOUSE_LEFT);
+
+	uptr id = (uptr)name;
+	IMGUI_Element_State *element_state = NULL;
+	auto& element_states = context->element_states;
+	for (u32 i = 0; i < element_states.len; ++i) {
+		if (element_states[i].id == id) {
+			element_state = &element_states[i];
+			break;
+		}
+	}
+	if (element_state == NULL) {
+		++element_states.len;
+		element_state = &element_states[element_states.len - 1];
+		element_state->id = id;
+		element_state->tree_begin.collapsed = 1;
+	}
+
+	if (mouse_over_element && mouse_pressed) {
+		context->text_color = V4_f32(1.0f, 1.0f, 0.0f, 1.0f);
+		element_state->tree_begin.collapsed = !element_state->tree_begin.collapsed;
+	} else if (mouse_over_element) {
+		context->text_color = V4_f32(0.0f, 1.0f, 1.0f, 1.0f);
+	} else {
+		context->text_color = V4_f32(1.0f, 0.0f, 1.0f, 1.0f);
+	}
+	u8 result = element_state->tree_begin.collapsed;
+
+	char buffer[1024];
+	char *prefix = result ? "- " : "+ ";
+	snprintf(buffer, ARRAY_SIZE(buffer), "%s%s", prefix, name);
+
+	imgui_text(context, buffer);
+	if (result) {
+		context->text_pos.x += 4;
+		++context->tree_indent_level;
+	}
+
+	context->text_color = color;
+	return result;
+}
+
+void imgui_tree_end(IMGUI_Context* context)
+{
+	context->text_pos.x -= 4;
+	--context->tree_indent_level;
+}
+
+void imgui_f32(IMGUI_Context* context, char* name, f32* value)
+{
+	char buffer[1024];
+	snprintf(buffer, ARRAY_SIZE(buffer), "%s: %f", name, *value);
+	u32 label_len = 0;
+	for (char *p = buffer; *p; ++p, ++label_len);
+
+	v2 glyph_size = 2.0f * V2_f32(TEXTURE_CODEPAGE_437.glyph_width,
+	                              TEXTURE_CODEPAGE_437.glyph_height);
+
+	v2 top_left = context->text_pos * glyph_size;
+	v2 bottom_right = (context->text_pos + V2_f32(label_len, 1)) * glyph_size;
+
+	v2 mouse_pos = (v2)context->input->mouse_pos;
+	u8 mouse_over_element = mouse_pos.x > top_left.x && mouse_pos.x < bottom_right.x
+                             && mouse_pos.y > top_left.y && mouse_pos.y < bottom_right.y;
+	u32 mouse_pressed = input_get_num_down_transitions(context->input, INPUT_BUTTON_MOUSE_LEFT);
+
+	if (mouse_over_element && mouse_pressed) {
+		context->text_color = V4_f32(1.0f, 1.0f, 0.0f, 1.0f);
+		// element_state->tree_begin.collapsed = !element_state->tree_begin.collapsed;
+		*value += 1;
+	} else if (mouse_over_element) {
+		context->text_color = V4_f32(0.0f, 1.0f, 1.0f, 1.0f);
+	} else {
+		context->text_color = V4_f32(1.0f, 0.0f, 1.0f, 1.0f);
+	}
+
+	imgui_text(context, buffer);
+}
+
 #endif
 
 // d3d11 implementation
@@ -113,7 +237,6 @@ void imgui_d3d11_draw(IMGUI_Context*          imgui,
 #ifndef JFG_HEADER_ONLY
 #include "imgui_dxbc_text_vertex_shader.data.h"
 #include "imgui_dxbc_text_pixel_shader.data.h"
-#include "codepage_437.h"
 
 u8 imgui_d3d11_init(IMGUI_Context* context, ID3D11Device* device)
 {
