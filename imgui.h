@@ -3,6 +3,7 @@
 
 #include "prelude.h"
 #include "containers.hpp"
+
 #include "imgui_gpu_data_types.h"
 // XXX - needed for memset, should remove this later
 #include <string.h>
@@ -50,6 +51,7 @@ struct IMGUI_Context
 	u32 tree_indent_level;
 	Input* input;
 	v2_u32 screen_size;
+	uptr hot_element_id;
 	IMGUI_VS_Text_Instance text_buffer[IMGUI_MAX_TEXT_CHARACTERS];
 
 	Max_Length_Array<IMGUI_Element_State, IMGUI_MAX_ELEMENTS> element_states;
@@ -68,9 +70,10 @@ void imgui_set_text_cursor(IMGUI_Context* context, v4 color, v2 pos);
 void imgui_text(IMGUI_Context* context, char* text);
 u8   imgui_tree_begin(IMGUI_Context* context, char* name);
 void imgui_tree_end(IMGUI_Context* context);
-void imgui_f32(IMGUI_Context* context, char* name);
+void imgui_f32(IMGUI_Context* context, char* name, f32* val, f32 min_val, f32 max_val);
 
 #ifndef JFG_HEADER_ONLY
+#include "jfg_math.h"
 #include "codepage_437.h"
 
 void imgui_begin(IMGUI_Context* context, Input* input, v2_u32 screen_size)
@@ -144,6 +147,7 @@ u8 imgui_tree_begin(IMGUI_Context* context, char* name)
 	u8 mouse_over_element = mouse_pos.x > top_left.x && mouse_pos.x < bottom_right.x
                              && mouse_pos.y > top_left.y && mouse_pos.y < bottom_right.y;
 	u32 mouse_pressed = input_get_num_down_transitions(context->input, INPUT_BUTTON_MOUSE_LEFT);
+	u32 mouse_released = input_get_num_up_transitions(context->input, INPUT_BUTTON_MOUSE_LEFT);
 
 	uptr id = (uptr)name;
 	IMGUI_Element_State *element_state = NULL;
@@ -161,14 +165,28 @@ u8 imgui_tree_begin(IMGUI_Context* context, char* name)
 		element_state->tree_begin.collapsed = 1;
 	}
 
-	if (mouse_over_element && mouse_pressed) {
-		context->text_color = V4_f32(1.0f, 1.0f, 0.0f, 1.0f);
-		element_state->tree_begin.collapsed = !element_state->tree_begin.collapsed;
-	} else if (mouse_over_element) {
-		context->text_color = V4_f32(0.0f, 1.0f, 1.0f, 1.0f);
+	uptr hot_element_id = context->hot_element_id;
+	if (!hot_element_id) {
+		if (mouse_over_element && mouse_pressed) {
+			context->text_color = V4_f32(1.0f, 1.0f, 0.0f, 1.0f);
+			context->hot_element_id = id;
+		} else if (mouse_over_element) {
+			context->text_color = V4_f32(0.0f, 1.0f, 1.0f, 1.0f);
+		} else {
+			context->text_color = V4_f32(1.0f, 0.0f, 1.0f, 1.0f);
+		}
+	} else if (hot_element_id == id) {
+		if (mouse_released) {
+			element_state->tree_begin.collapsed = !element_state->tree_begin.collapsed;
+			context->hot_element_id = 0;
+			context->text_color = V4_f32(1.0f, 0.0f, 1.0f, 1.0f);
+		} else {
+			context->text_color = V4_f32(1.0f, 1.0f, 0.0f, 1.0f);
+		}
 	} else {
 		context->text_color = V4_f32(1.0f, 0.0f, 1.0f, 1.0f);
 	}
+
 	u8 result = element_state->tree_begin.collapsed;
 
 	char buffer[1024];
@@ -191,7 +209,7 @@ void imgui_tree_end(IMGUI_Context* context)
 	--context->tree_indent_level;
 }
 
-void imgui_f32(IMGUI_Context* context, char* name, f32* value)
+void imgui_f32(IMGUI_Context* context, char* name, f32* value, f32 min_val, f32 max_val)
 {
 	char buffer[1024];
 	snprintf(buffer, ARRAY_SIZE(buffer), "%s: %f", name, *value);
@@ -208,13 +226,30 @@ void imgui_f32(IMGUI_Context* context, char* name, f32* value)
 	u8 mouse_over_element = mouse_pos.x > top_left.x && mouse_pos.x < bottom_right.x
                              && mouse_pos.y > top_left.y && mouse_pos.y < bottom_right.y;
 	u32 mouse_pressed = input_get_num_down_transitions(context->input, INPUT_BUTTON_MOUSE_LEFT);
+	u32 mouse_released = input_get_num_up_transitions(context->input, INPUT_BUTTON_MOUSE_LEFT);
 
-	if (mouse_over_element && mouse_pressed) {
-		context->text_color = V4_f32(1.0f, 1.0f, 0.0f, 1.0f);
-		// element_state->tree_begin.collapsed = !element_state->tree_begin.collapsed;
-		*value += 1;
-	} else if (mouse_over_element) {
-		context->text_color = V4_f32(0.0f, 1.0f, 1.0f, 1.0f);
+	uptr id = (uptr)value;
+	uptr hot_element_id = context->hot_element_id;
+
+	if (!hot_element_id) {
+		if (mouse_over_element && mouse_pressed) {
+			context->text_color = V4_f32(1.0f, 1.0f, 0.0f, 1.0f);
+			context->hot_element_id = id;
+			// *value += 1;
+		} else if (mouse_over_element) {
+			context->text_color = V4_f32(0.0f, 1.0f, 1.0f, 1.0f);
+		} else {
+			context->text_color = V4_f32(1.0f, 0.0f, 1.0f, 1.0f);
+		}
+	} else if (hot_element_id == id) {
+		if (mouse_released) {
+			context->hot_element_id = 0;
+			context->text_color = V4_f32(1.0f, 0.0f, 1.0f, 1.0f);
+		} else {
+			f32 delta = (max_val - min_val) * (f32)context->input->mouse_delta.x / 400.0f;
+			*value = clamp(*value + delta, min_val, max_val);
+			context->text_color = V4_f32(1.0f, 1.0f, 0.0f, 1.0f);
+		}
 	} else {
 		context->text_color = V4_f32(1.0f, 0.0f, 1.0f, 1.0f);
 	}

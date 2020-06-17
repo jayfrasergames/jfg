@@ -72,6 +72,7 @@ void input_push(Input* input, Input_Event event);
 void input_button_down(Input* input, Input_Button button);
 void input_button_up(Input* input, Input_Button button);
 u32 input_get_num_down_transitions(Input* input, Input_Button button);
+u32 input_get_num_up_transitions(Input* input, Input_Button button);
 
 #ifndef JFG_HEADER_ONLY
 
@@ -115,6 +116,16 @@ u32 input_get_num_down_transitions(Input* input, Input_Button button)
 	Input_Button_Frame_Data *button_data = &input->button_data[button];
 	u32 transitions = button_data->num_transitions;
 	if (!(button_data->flags & INPUT_BUTTON_FLAG_STARTED_DOWN)) {
+		++transitions;
+	}
+	return transitions / 2;
+}
+
+u32 input_get_num_up_transitions(Input* input, Input_Button button)
+{
+	Input_Button_Frame_Data *button_data = &input->button_data[button];
+	u32 transitions = button_data->num_transitions;
+	if (button_data->flags & INPUT_BUTTON_FLAG_STARTED_DOWN) {
 		++transitions;
 	}
 	return transitions / 2;
