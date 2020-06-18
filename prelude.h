@@ -192,6 +192,22 @@ VEC_TYPES
 	bool operator==(v2_##type a, v2_##type b) \
 	{ \
 		return a.x == b.x && a.y == b.y; \
+	} \
+	void operator+=(v2_##type& a, v2_##type b) \
+	{ \
+		a = a + b; \
+	} \
+	void operator+=(v2_##type& a, type b) \
+	{ \
+		a = a + b; \
+	} \
+	void operator-=(v2_##type& a, v2_##type b) \
+	{ \
+		a = a - b; \
+	} \
+	void operator-=(v2_##type& a, type b) \
+	{ \
+		a = a - b; \
 	}
 VEC_TYPES
 #undef VEC_TYPE
