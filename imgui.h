@@ -71,6 +71,7 @@ void imgui_text(IMGUI_Context* context, char* text);
 u8   imgui_tree_begin(IMGUI_Context* context, char* name);
 void imgui_tree_end(IMGUI_Context* context);
 void imgui_f32(IMGUI_Context* context, char* name, f32* val, f32 min_val, f32 max_val);
+u8   imgui_button(IMGUI_Context* context, char* caption);
 
 #ifndef JFG_HEADER_ONLY
 #include "jfg_math.h"
@@ -162,7 +163,7 @@ u8 imgui_tree_begin(IMGUI_Context* context, char* name)
 		++element_states.len;
 		element_state = &element_states[element_states.len - 1];
 		element_state->id = id;
-		element_state->tree_begin.collapsed = 1;
+		// element_state->tree_begin.collapsed = 1;
 	}
 
 	uptr hot_element_id = context->hot_element_id;
@@ -255,6 +256,54 @@ void imgui_f32(IMGUI_Context* context, char* name, f32* value, f32 min_val, f32 
 	}
 
 	imgui_text(context, buffer);
+}
+
+u8 imgui_button(IMGUI_Context* context, char* caption)
+{
+	u32 label_len = 0;
+	for (char *p = caption; *p; ++p, ++label_len);
+
+	v2 glyph_size = 2.0f * V2_f32(TEXTURE_CODEPAGE_437.glyph_width,
+	                              TEXTURE_CODEPAGE_437.glyph_height);
+
+	v2 top_left = context->text_pos * glyph_size;
+	v2 bottom_right = (context->text_pos + V2_f32(label_len, 1)) * glyph_size;
+
+	v2 mouse_pos = (v2)context->input->mouse_pos;
+	u8 mouse_over_element = mouse_pos.x > top_left.x && mouse_pos.x < bottom_right.x
+                             && mouse_pos.y > top_left.y && mouse_pos.y < bottom_right.y;
+	u32 mouse_pressed = input_get_num_down_transitions(context->input, INPUT_BUTTON_MOUSE_LEFT);
+	u32 mouse_released = input_get_num_up_transitions(context->input, INPUT_BUTTON_MOUSE_LEFT);
+
+	uptr id = (uptr)caption;
+	uptr hot_element_id = context->hot_element_id;
+
+	u8 result = 0;
+	if (!hot_element_id) {
+		if (mouse_over_element && mouse_pressed) {
+			context->text_color = V4_f32(1.0f, 1.0f, 0.0f, 1.0f);
+			context->hot_element_id = id;
+			// *value += 1;
+		} else if (mouse_over_element) {
+			context->text_color = V4_f32(0.0f, 1.0f, 1.0f, 1.0f);
+		} else {
+			context->text_color = V4_f32(1.0f, 0.0f, 1.0f, 1.0f);
+		}
+	} else if (hot_element_id == id) {
+		if (mouse_released) {
+			context->hot_element_id = 0;
+			context->text_color = V4_f32(1.0f, 0.0f, 1.0f, 1.0f);
+			result = 1;
+		} else {
+			context->text_color = V4_f32(1.0f, 1.0f, 0.0f, 1.0f);
+		}
+	} else {
+		context->text_color = V4_f32(1.0f, 0.0f, 1.0f, 1.0f);
+	}
+
+	imgui_text(context, caption);
+
+	return result;
 }
 
 #endif
