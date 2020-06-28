@@ -15,6 +15,12 @@ struct Slice
 	Slice(T* base, u32 len) : base(base), len(len) { }
 };
 
+template <typename T>
+Slice<T> slice_one(T* item)
+{
+	return Slice<T>(item, 1);
+}
+
 template <typename T, u32 size>
 struct Stack
 {
@@ -27,6 +33,7 @@ struct Stack
 	void reset()      { top = 0; }
 	void push(T item) { ASSERT(top < size); items[top++] = item; }
 	T    peek()       { ASSERT(top); return items[top - 1]; }
+	T*   peek_ptr()   { ASSERT(top); return &items[top - 1]; }
 	T    pop()        { ASSERT(top); return items[--top]; }
 };
 

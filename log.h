@@ -15,10 +15,17 @@ struct Log
 	u32   buffer_pos;
 };
 
+void  log_reset(Log* l);
 void  log(Log* l, char* string);
 char* log_get_line(Log* l, u32 line);
 
 #ifndef JFG_HEADER_ONLY
+void log_reset(Log* l)
+{
+	l->cur_line = 0;
+	l->buffer_pos = 0;
+}
+
 void log(Log* l, char* string)
 {
 	u32 cur_length = 0;
