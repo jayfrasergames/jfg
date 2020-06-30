@@ -35,6 +35,10 @@ typedef double f64;
 	VEC_TYPE(i8) VEC_TYPE(i16) VEC_TYPE(i32) VEC_TYPE(i64) \
 	VEC_TYPE(f32) VEC_TYPE(f64)
 
+#define SIGNED_VEC_TYPES \
+	VEC_TYPE(i8) VEC_TYPE(i16) VEC_TYPE(i32) VEC_TYPE(i64) \
+	VEC_TYPE(f32) VEC_TYPE(f64)
+
 // forward declare vec types
 #define VEC_TYPE(type) struct v2_##type; struct v3_##type; struct v4_##type;
 VEC_TYPES
@@ -212,12 +216,16 @@ VEC_TYPES
 	void operator-=(v2_##type& a, type b) \
 	{ \
 		a = a - b; \
-	} \
+	}
+VEC_TYPES
+#undef VEC_TYPE
+
+#define VEC_TYPE(type) \
 	v2_##type operator-(v2_##type& v) \
 	{ \
 		return V2_##type(-v.x, -v.y); \
 	}
-VEC_TYPES
+SIGNED_VEC_TYPES
 #undef VEC_TYPE
 
 #undef VEC_TYPES

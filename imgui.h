@@ -137,10 +137,10 @@ u8 imgui_tree_begin(IMGUI_Context* context, char* name)
 	for (char *p = name; *p; ++p) {
 		++name_len;
 	}
-	v2 glyph_size = 2.0f * V2_f32(TEXTURE_CODEPAGE_437.glyph_width,
-	                              TEXTURE_CODEPAGE_437.glyph_height);
+	v2 glyph_size = 2.0f * V2_f32((f32)TEXTURE_CODEPAGE_437.glyph_width,
+	                              (f32)TEXTURE_CODEPAGE_437.glyph_height);
 	v2 top_left = context->text_pos * glyph_size;
-	v2 bottom_right = (context->text_pos + V2_f32(name_len, 1)) * glyph_size;
+	v2 bottom_right = (context->text_pos + V2_f32((f32)name_len, 1.0f)) * glyph_size;
 
 	v4_f32 color = context->text_color;
 
@@ -217,11 +217,11 @@ void imgui_f32(IMGUI_Context* context, char* name, f32* value, f32 min_val, f32 
 	u32 label_len = 0;
 	for (char *p = buffer; *p; ++p, ++label_len);
 
-	v2 glyph_size = 2.0f * V2_f32(TEXTURE_CODEPAGE_437.glyph_width,
-	                              TEXTURE_CODEPAGE_437.glyph_height);
+	v2 glyph_size = 2.0f * V2_f32((f32)TEXTURE_CODEPAGE_437.glyph_width,
+	                              (f32)TEXTURE_CODEPAGE_437.glyph_height);
 
 	v2 top_left = context->text_pos * glyph_size;
-	v2 bottom_right = (context->text_pos + V2_f32(label_len, 1)) * glyph_size;
+	v2 bottom_right = (context->text_pos + V2_f32((f32)label_len, 1.0f)) * glyph_size;
 
 	v2 mouse_pos = (v2)context->input->mouse_pos;
 	u8 mouse_over_element = mouse_pos.x > top_left.x && mouse_pos.x < bottom_right.x
@@ -263,11 +263,11 @@ u8 imgui_button(IMGUI_Context* context, char* caption)
 	u32 label_len = 0;
 	for (char *p = caption; *p; ++p, ++label_len);
 
-	v2 glyph_size = 2.0f * V2_f32(TEXTURE_CODEPAGE_437.glyph_width,
-	                              TEXTURE_CODEPAGE_437.glyph_height);
+	v2 glyph_size = 2.0f * V2_f32((f32)TEXTURE_CODEPAGE_437.glyph_width,
+	                              (f32)TEXTURE_CODEPAGE_437.glyph_height);
 
 	v2 top_left = context->text_pos * glyph_size;
-	v2 bottom_right = (context->text_pos + V2_f32(label_len, 1)) * glyph_size;
+	v2 bottom_right = (context->text_pos + V2_f32((f32)label_len, 1.0f)) * glyph_size;
 
 	v2 mouse_pos = (v2)context->input->mouse_pos;
 	u8 mouse_over_element = mouse_pos.x > top_left.x && mouse_pos.x < bottom_right.x

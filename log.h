@@ -29,7 +29,6 @@ void log_reset(Log* l)
 void log(Log* l, char* string)
 {
 	u32 cur_length = 0;
-	u32 lines_written = 0;
 	u32 buffer_pos = l->buffer_pos;
 	if (LOG_BUFFER_SIZE - buffer_pos < LOG_MAX_LINE_LENGTH) {
 		buffer_pos = 0;
