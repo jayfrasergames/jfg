@@ -51,6 +51,14 @@ struct Max_Length_Array
 	void append(T item)  { ASSERT(len < size); items[len++] = item; }
 	T    pop()           { ASSERT(len); return items[--len]; }
 	void remove(u32 idx) { ASSERT(idx < len); items[idx] = items[--len]; }
+	void remove_preserve_order(u32 idx)
+	{
+		ASSERT(idx < len);
+		--len;
+		for (u32 i = idx; i < len; ++i) {
+			items[i] = items[i + 1];
+		}
+	}
 	Slice<T> slice(u32 start, u32 length)
 	{
 		ASSERT(start + length < len);

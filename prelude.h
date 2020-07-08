@@ -157,6 +157,10 @@ VEC_TYPES
 	{ \
 		return V2_##type(a.x * b.x, a.y * b.y); \
 	} \
+	v4_##type operator*(v4_##type a, v4_##type b) \
+	{ \
+		return V4_##type(a.x * b.x, a.y * b.y, a.z * b.z, a.w * b.w); \
+	} \
 	v2_##type operator/(v2_##type a, v2_##type b) \
 	{ \
 		return V2_##type(a.x / b.x, a.y / b.y); \
@@ -173,6 +177,10 @@ VEC_TYPES
 	{ \
 		return V2_##type(s * v.x, s * v.y); \
 	} \
+	v4_##type operator*(type s, v4_##type v) \
+	{ \
+		return V4_##type(s * v.x, s * v.y, s * v.z, s * v.w); \
+	} \
 	v2_##type operator/(type s, v2_##type v) \
 	{ \
 		return V2_##type(s / v.x, s / v.y); \
@@ -188,6 +196,10 @@ VEC_TYPES
 	v2_##type operator*(v2_##type v, type s) \
 	{ \
 		return V2_##type(v.x * s, v.y * s); \
+	} \
+	v4_##type operator*(v4_##type v, type s) \
+	{ \
+		return V4_##type(v.x * s, v.y * s, v.z * s, v.w * s); \
 	} \
 	v2_##type operator/(v2_##type v, type s) \
 	{ \
@@ -216,6 +228,22 @@ VEC_TYPES
 	void operator-=(v2_##type& a, type b) \
 	{ \
 		a = a - b; \
+	} \
+	void operator*=(v2_##type& a, v2_##type b) \
+	{ \
+		a = a * b; \
+	} \
+	void operator*=(v2_##type& a, type b) \
+	{ \
+		a = a * b; \
+	} \
+	void operator*=(v4_##type& a, v4_##type b) \
+	{ \
+		a = a * b; \
+	} \
+	void operator*=(v4_##type& a, type b) \
+	{ \
+		a = a * b; \
 	}
 VEC_TYPES
 #undef VEC_TYPE
