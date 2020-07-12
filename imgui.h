@@ -71,6 +71,7 @@ void imgui_text(IMGUI_Context* context, char* text);
 u8   imgui_tree_begin(IMGUI_Context* context, char* name);
 void imgui_tree_end(IMGUI_Context* context);
 void imgui_f32(IMGUI_Context* context, char* name, f32* val, f32 min_val, f32 max_val);
+void imgui_u32(IMGUI_Context* context, char* name, u32* val, u32 min_val, u32 max_val);
 u8   imgui_button(IMGUI_Context* context, char* caption);
 
 #ifndef JFG_HEADER_ONLY
@@ -249,6 +250,55 @@ void imgui_f32(IMGUI_Context* context, char* name, f32* value, f32 min_val, f32 
 		} else {
 			f32 delta = (max_val - min_val) * (f32)context->input->mouse_delta.x / 400.0f;
 			*value = clamp(*value + delta, min_val, max_val);
+			context->text_color = V4_f32(1.0f, 1.0f, 0.0f, 1.0f);
+		}
+	} else {
+		context->text_color = V4_f32(1.0f, 0.0f, 1.0f, 1.0f);
+	}
+
+	imgui_text(context, buffer);
+}
+
+void imgui_u32(IMGUI_Context* context, char* name, u32* value, u32 min_val, u32 max_val)
+{
+	char buffer[1024];
+	snprintf(buffer, ARRAY_SIZE(buffer), "%s: %u", name, *value);
+	u32 label_len = 0;
+	for (char *p = buffer; *p; ++p, ++label_len);
+
+	v2 glyph_size = 2.0f * V2_f32((f32)TEXTURE_CODEPAGE_437.glyph_width,
+	                              (f32)TEXTURE_CODEPAGE_437.glyph_height);
+
+	v2 top_left = context->text_pos * glyph_size;
+	v2 bottom_right = (context->text_pos + V2_f32((f32)label_len, 1.0f)) * glyph_size;
+
+	v2 mouse_pos = (v2)context->input->mouse_pos;
+	u8 mouse_over_element = mouse_pos.x > top_left.x && mouse_pos.x < bottom_right.x
+                             && mouse_pos.y > top_left.y && mouse_pos.y < bottom_right.y;
+	u32 mouse_pressed = input_get_num_down_transitions(context->input, INPUT_BUTTON_MOUSE_LEFT);
+	u32 mouse_released = input_get_num_up_transitions(context->input, INPUT_BUTTON_MOUSE_LEFT);
+
+	uptr id = (uptr)value;
+	uptr hot_element_id = context->hot_element_id;
+
+	if (!hot_element_id) {
+		if (mouse_over_element && mouse_pressed) {
+			context->text_color = V4_f32(1.0f, 1.0f, 0.0f, 1.0f);
+			context->hot_element_id = id;
+			// *value += 1;
+		} else if (mouse_over_element) {
+			context->text_color = V4_f32(0.0f, 1.0f, 1.0f, 1.0f);
+		} else {
+			context->text_color = V4_f32(1.0f, 0.0f, 1.0f, 1.0f);
+		}
+	} else if (hot_element_id == id) {
+		if (mouse_released) {
+			context->hot_element_id = 0;
+			context->text_color = V4_f32(1.0f, 0.0f, 1.0f, 1.0f);
+		} else {
+			f32 delta = (max_val - min_val) * (f32)context->input->mouse_delta.x / 400.0f;
+			f32 val = clamp((f32)*value + delta, (f32)min_val, (f32)max_val);
+			*value = (u32)val;
 			context->text_color = V4_f32(1.0f, 1.0f, 0.0f, 1.0f);
 		}
 	} else {
