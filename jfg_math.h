@@ -59,4 +59,65 @@ v2 operator*(m2 m, v2 v)
 	return V2_f32(m._00 * v.x + m._10 * v.y, m._01 * v.x + m._11 * v.y);
 }
 
+struct Rational
+{
+	i32 numerator;
+	i32 denominator;
+
+	static Rational cancel(i32 n, i32 d)
+	{
+		u32 a = abs(n), b = abs(d);
+		while (u32 t = a % b) {
+			a = b;
+			b = t;
+		}
+		i32 gcd = (i32)b;
+		Rational result = {};
+		ASSERT(n % gcd == 0 && d % gcd == 0);
+		result.numerator = n / gcd;
+		result.denominator = d / gcd;
+		return result;
+	}
+};
+
+bool operator>(Rational a, Rational b)
+{
+	i32 denominator = a.denominator * b.denominator;
+	bool result = a.numerator * b.denominator > b.numerator * a.denominator;
+	if (denominator < 0) {
+		result = !result;
+	}
+	return result;
+}
+
+bool operator>=(Rational a, Rational b)
+{
+	i32 denominator = a.denominator * b.denominator;
+	bool result = a.numerator * b.denominator >= b.numerator * a.denominator;
+	if (denominator < 0) {
+		result = !result;
+	}
+	return result;
+}
+
+bool operator<(Rational a, Rational b)
+{
+	i32 denominator = a.denominator * b.denominator;
+	bool result = a.numerator * b.denominator < b.numerator * a.denominator;
+	if (denominator < 0) {
+		result = !result;
+	}
+	return result;
+}
+
+bool operator<=(Rational a, Rational b)
+{
+	i32 denominator = a.denominator * b.denominator;
+	bool result = a.numerator * b.denominator <= b.numerator * a.denominator;
+	if (denominator < 0) {
+		result = !result;
+	}
+	return result;
+}
+
 #endif
