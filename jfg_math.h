@@ -66,16 +66,21 @@ struct Rational
 
 	static Rational cancel(i32 n, i32 d)
 	{
-		u32 a = abs(n), b = abs(d);
-		while (u32 t = a % b) {
-			a = b;
-			b = t;
-		}
-		i32 gcd = (i32)b;
 		Rational result = {};
-		ASSERT(n % gcd == 0 && d % gcd == 0);
-		result.numerator = n / gcd;
-		result.denominator = d / gcd;
+		if (d) {
+			u32 a = abs(n), b = abs(d);
+			while (u32 t = a % b) {
+				a = b;
+				b = t;
+			}
+			i32 gcd = (i32)b;
+			ASSERT(n % gcd == 0 && d % gcd == 0);
+			result.numerator = n / gcd;
+			result.denominator = d / gcd;
+		} else {
+			result.numerator = n / abs(n);
+			result.denominator = 0;
+		}
 		return result;
 	}
 };
