@@ -16,7 +16,7 @@ struct Log
 };
 
 void  log_reset(Log* l);
-void  log(Log* l, char* string);
+void  log(Log* l, char* format_string, ...);
 char* log_get_line(Log* l, u32 line);
 
 #ifndef JFG_HEADER_ONLY
@@ -26,8 +26,14 @@ void log_reset(Log* l)
 	l->buffer_pos = 0;
 }
 
-void log(Log* l, char* string)
+void log(Log* l, char* format_string, ...)
 {
+	char print_buffer[4096];
+	va_list args;
+	va_start(args, format_string);
+	vsnprintf(print_buffer, ARRAY_SIZE(print_buffer), format_string, args);
+	va_end(args);
+
 	u32 cur_length = 0;
 	u32 buffer_pos = l->buffer_pos;
 	if (LOG_BUFFER_SIZE - buffer_pos < LOG_MAX_LINE_LENGTH) {
@@ -35,7 +41,7 @@ void log(Log* l, char* string)
 	}
 	char *buffer = l->buffer;
 	char *line_start = &buffer[buffer_pos];
-	for (char *p = string; *p; ++p) {
+	for (char *p = print_buffer; *p; ++p) {
 		++cur_length;
 		buffer[buffer_pos] = *p;
 		buffer_pos = (buffer_pos + 1) % LOG_BUFFER_SIZE;

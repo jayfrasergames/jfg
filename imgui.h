@@ -67,7 +67,7 @@ struct IMGUI_Context
 
 void imgui_begin(IMGUI_Context* context, Input* input, v2_u32 screen_size);
 void imgui_set_text_cursor(IMGUI_Context* context, v4 color, v2 pos);
-void imgui_text(IMGUI_Context* context, char* text);
+void imgui_text(IMGUI_Context* context, char* format_string, ...);
 u8   imgui_tree_begin(IMGUI_Context* context, char* name);
 void imgui_tree_end(IMGUI_Context* context);
 void imgui_f32(IMGUI_Context* context, char* name, f32* val, f32 min_val, f32 max_val);
@@ -94,13 +94,19 @@ void imgui_set_text_cursor(IMGUI_Context* context, v4 color, v2 pos)
 	context->text_color = color;
 }
 
-void imgui_text(IMGUI_Context* context, char* text)
+void imgui_text(IMGUI_Context* context, char* format_string, ...)
 {
+	char buffer[4096];
+	va_list args;
+	va_start(args, format_string);
+	vsnprintf(buffer, ARRAY_SIZE(buffer), format_string, args);
+	va_end(args);
+
 	v2 pos = context->text_pos;
 	v4 color = context->text_color;
 	u32 index = context->text_index;
 	IMGUI_VS_Text_Instance *cur_char = &context->text_buffer[index];
-	for (u8 *p = (u8*)text; *p; ++p) {
+	for (u8 *p = (u8*)buffer; *p; ++p) {
 		if (index == IMGUI_MAX_TEXT_CHARACTERS) {
 			break;
 		}

@@ -1,8 +1,10 @@
 #ifndef JFG_PRELUDE_H
 #define JFG_PRELUDE_H
 
+#include <stdio.h>
 #include <stdint.h>
 #include <assert.h>
+#include <stdarg.h>
 
 typedef uint8_t   u8;
 typedef uint16_t  u16;
@@ -261,5 +263,15 @@ SIGNED_VEC_TYPES
 typedef v2_f32 v2;
 typedef v3_f32 v3;
 typedef v4_f32 v4;
+
+char *fmt(char *fmtstr, ...)
+{
+	static thread_local char buffer[4096];
+	va_list args;
+	va_start(args, fmtstr);
+	vsnprintf(buffer, ARRAY_SIZE(buffer), fmtstr, args);
+	va_end(args);
+	return buffer;
+}
 
 #endif
