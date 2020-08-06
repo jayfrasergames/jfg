@@ -21,6 +21,22 @@ Slice<T> slice_one(T* item)
 	return Slice<T>(item, 1);
 }
 
+template <typename T>
+struct Output_Buffer
+{
+	T   *base;
+	u32 *len;
+	u32 size;
+
+	operator bool() { return *len; }
+	T& operator[](u32 idx) { ASSERT(idx < *len); return base[idx]; }
+
+	void reset()        { *len = 0; }
+	void append(T item) { ASSERT(*len < size); base[(*len)++] = item; }
+
+	Output_Buffer(T* base, u32* len, u32 size) : base(base), len(len), size(size) { }
+};
+
 template <typename T, u32 size>
 struct Stack
 {
@@ -43,9 +59,10 @@ struct Max_Length_Array
 	u32 len;
 	T   items[size];
 
-	operator bool()     { return len; }
-	operator Slice<T>() { return Slice<T>(items, len); }
-	T& operator[](u32 idx) { ASSERT(idx < len); return items[idx]; }
+	operator bool()             { return len; }
+	operator Slice<T>()         { return Slice<T>(items, len); }
+	operator Output_Buffer<T>() { return Output_Buffer<T>(items, &len, size); }
+	T& operator[](u32 idx)      { ASSERT(idx < len); return items[idx]; }
 
 	void reset()         { len = 0; }
 	void append(T item)  { ASSERT(len < size); items[len++] = item; }
