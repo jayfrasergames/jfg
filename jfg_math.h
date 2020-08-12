@@ -23,16 +23,24 @@ MAKE_MIN_MAX_FUNCTIONS(f32)
 
 #undef MAKE_MIN_MAX_FUNCTIONS
 
-static inline f32 lerp(f32 start, f32 end, f32 weight) {
+static inline f32 lerp(f32 start, f32 end, f32 weight)
+{
 	return start + (end - start) * weight;
 }
 
-static inline v2 lerp(v2 start, v2 end, f32 weight) {
+static inline v2 lerp(v2 start, v2 end, f32 weight)
+{
 	return start + (end - start) * weight;
 }
 
-static inline f32 clamp(f32 val, f32 low, f32 high) {
+static inline f32 clamp(f32 val, f32 low, f32 high)
+{
 	return min(max(low, val), high);
+}
+
+static inline f32 dot(v2 a, v2 b)
+{
+	return a.x * b.x + a.y * b.y;
 }
 
 struct m2
