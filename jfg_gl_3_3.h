@@ -1,6 +1,8 @@
 #ifndef JFG_GL_3_3
 #define JFG_GL_3_3
 
+#include "prelude.h"
+
 typedef u32  GLbitfield;
 typedef u32  GLenum;
 typedef u8   GLboolean;
@@ -60,7 +62,11 @@ typedef i32 GLintptr;
 #define GL_4_BYTES        0x1409
 #define GL_DOUBLE         0x140A
 
-#define GL_TRIANGLES 0x0004
+#define GL_TRIANGLES                0x0004
+#define GL_TRIANGLE_STRIP           0x0005
+#define GL_TRIANGLE_FAN             0x0006
+#define GL_TRIANGLES_ADJACENCY      0x000C
+#define GL_TRIANGLE_STRIP_ADJACENCY 0x000D
 
 #define GL_BLEND               0x0BE2
 #define GL_CULL_FACE           0x0B44
@@ -74,8 +80,16 @@ typedef i32 GLintptr;
 #define GL_COLOR_BUFFER_BIT 0x00004000
 
 #define GL_TEXTURE_2D         0x0DE1
-#define GL_RGBA32F            0x8814
+
 #define GL_RGBA               0x1908
+#define GL_RED                0x1903
+#define GL_RED_INTEGER        0x8D94
+
+#define GL_RGBA32F            0x8814
+#define GL_R8                 0x8229
+#define GL_R8I                0x8231
+#define GL_R8UI               0x8232
+
 #define GL_TEXTURE0           0x84C0
 #define GL_TEXTURE1           0x84C1
 #define GL_TEXTURE_MAG_FILTER 0x2800
@@ -136,6 +150,7 @@ typedef i32 GLintptr;
 		GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid *data) \
 	GL_FUNC(void,   glTexParameteri,    GLenum target, GLenum pname, GLint param) \
 	GL_FUNC(void,   glActiveTexture,    GLenum texture) \
+	GL_FUNC(GLenum, glGetError) \
 	/* end function list */
 
 #define GL_FUNC(return_type, name, ...) \
