@@ -98,59 +98,56 @@ typedef i32 GLintptr;
 
 #define GL_3_3_FUNCTIONS \
 	/* begin function list */ \
-	GL_FUNC(void,   glClear,            GLbitfield mask) \
-	GL_FUNC(void,   glClearColor,       GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha) \
-	GL_FUNC(void,   glClearDepth,       GLclampd depth) \
-	GL_FUNC(GLuint, glCreateShader,     GLenum shaderType) \
-	GL_FUNC(void,   glDeleteShader,     GLuint shader) \
-	GL_FUNC(void,   glShaderSource,     GLuint shader, GLsizei count, const GLchar **string, const GLint *length) \
-	GL_FUNC(void,   glCompileShader,    GLuint shader) \
-	GL_FUNC(void,   glGetShaderiv,      GLuint shader, GLenum pname, GLint *params) \
-	GL_FUNC(void,   glGetShaderInfoLog, GLuint shader, GLsizei maxLength, GLsizei *length, GLchar *infoLog) \
-	GL_FUNC(GLuint, glCreateProgram,    void) \
-	GL_FUNC(GLuint, glDeleteProgram,    GLuint program) \
-	GL_FUNC(void,   glAttachShader,     GLuint program, GLuint shader) \
-	GL_FUNC(void,   glLinkProgram,      GLuint program) \
-	GL_FUNC(void,   glGetProgramiv,     GLuint program, GLenum pname, GLint *params) \
-	GL_FUNC(void,   glGetProgramInfoLog, GLuint program, GLsizei maxLength, GLsizei *length, GLchar *infoLog) \
-	GL_FUNC(void,   glUseProgram,       GLuint program) \
-	GL_FUNC(GLint,  glGetUniformLocation, GLuint program, const GLchar *name) \
-	GL_FUNC(void,   glUniform1i,        GLint location, GLint v0) \
-	GL_FUNC(void,   glUniform2f,        GLint location, GLfloat v0, GLfloat v1) \
-	GL_FUNC(void,   glUniform3f,        GLint location, GLfloat v0, GLfloat v1, GLfloat v2) \
-	GL_FUNC(void,   glUniform4f,        GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3) \
-	GL_FUNC(void,   glUniformMatrix4fv, GLint location, GLsizei count, GLboolean transpose, const GLfloat *value) \
-	GL_FUNC(void,   glGenBuffers,       GLsizei n, GLuint *buffers) \
-	GL_FUNC(void,   glDeleteBuffers,    GLsizei n, GLuint *buffers) \
-	GL_FUNC(void,   glBindBuffer,       GLenum target, GLuint buffer) \
-	GL_FUNC(void,   glBufferData,       GLenum target, GLsizeiptr size, const GLvoid *data, GLenum usage) \
-	GL_FUNC(void,   glBufferSubData,    GLenum target, GLintptr offset, GLsizeiptr size, const GLvoid *data) \
-	GL_FUNC(void,   glGenVertexArrays,  GLsizei n, GLuint *arrays) \
-	GL_FUNC(void,   glDeleteVertexArrays, GLsizei n, GLuint *arrays) \
-	GL_FUNC(void,   glBindVertexArray,  GLuint array) \
-	GL_FUNC(void,   glVertexAttribPointer, GLuint index, GLint size, GLenum type, GLboolean normalized, \
-		GLsizei stride, const GLvoid *pointer) \
-	GL_FUNC(void,   glVertexAttribIPointer, GLuint index, GLint size, GLenum type, GLsizei stride, \
-		const GLvoid *pointer) \
-	GL_FUNC(void,   glVertexAttribDivisor, GLuint index, GLuint divisor) \
+	GL_FUNC(void,   glClear,                   GLbitfield mask) \
+	GL_FUNC(void,   glClearColor,              GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha) \
+	GL_FUNC(void,   glClearDepth,              GLclampd depth) \
+	GL_FUNC(GLuint, glCreateShader,            GLenum shaderType) \
+	GL_FUNC(void,   glDeleteShader,            GLuint shader) \
+	GL_FUNC(void,   glShaderSource,            GLuint shader, GLsizei count, const GLchar **string, const GLint *length) \
+	GL_FUNC(void,   glCompileShader,           GLuint shader) \
+	GL_FUNC(void,   glGetShaderiv,             GLuint shader, GLenum pname, GLint *params) \
+	GL_FUNC(void,   glGetShaderInfoLog,        GLuint shader, GLsizei maxLength, GLsizei *length, GLchar *infoLog) \
+	GL_FUNC(GLuint, glCreateProgram,           void) \
+	GL_FUNC(GLuint, glDeleteProgram,           GLuint program) \
+	GL_FUNC(void,   glAttachShader,            GLuint program, GLuint shader) \
+	GL_FUNC(void,   glLinkProgram,             GLuint program) \
+	GL_FUNC(void,   glGetProgramiv,            GLuint program, GLenum pname, GLint *params) \
+	GL_FUNC(void,   glGetProgramInfoLog,       GLuint program, GLsizei maxLength, GLsizei *length, GLchar *infoLog) \
+	GL_FUNC(void,   glUseProgram,              GLuint program) \
+	GL_FUNC(GLint,  glGetUniformLocation,      GLuint program, const GLchar *name) \
+	GL_FUNC(void,   glUniform1i,               GLint location, GLint v0) \
+	GL_FUNC(void,   glUniform2f,               GLint location, GLfloat v0, GLfloat v1) \
+	GL_FUNC(void,   glUniform3f,               GLint location, GLfloat v0, GLfloat v1, GLfloat v2) \
+	GL_FUNC(void,   glUniform4f,               GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3) \
+	GL_FUNC(void,   glUniformMatrix4fv,        GLint location, GLsizei count, GLboolean transpose, const GLfloat *value) \
+	GL_FUNC(void,   glUniformMatrix3x2fv,      GLint location, GLsizei count, GLboolean transpose, const GLfloat *value) \
+	GL_FUNC(void,   glGenBuffers,              GLsizei n, GLuint *buffers) \
+	GL_FUNC(void,   glDeleteBuffers,           GLsizei n, GLuint *buffers) \
+	GL_FUNC(void,   glBindBuffer,              GLenum target, GLuint buffer) \
+	GL_FUNC(void,   glBufferData,              GLenum target, GLsizeiptr size, const GLvoid *data, GLenum usage) \
+	GL_FUNC(void,   glBufferSubData,           GLenum target, GLintptr offset, GLsizeiptr size, const GLvoid *data) \
+	GL_FUNC(void,   glGenVertexArrays,         GLsizei n, GLuint *arrays) \
+	GL_FUNC(void,   glDeleteVertexArrays,      GLsizei n, GLuint *arrays) \
+	GL_FUNC(void,   glBindVertexArray,         GLuint array) \
+	GL_FUNC(void,   glVertexAttribPointer,     GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid *pointer) \
+	GL_FUNC(void,   glVertexAttribIPointer,    GLuint index, GLint size, GLenum type, GLsizei stride, const GLvoid *pointer) \
+	GL_FUNC(void,   glVertexAttribDivisor,     GLuint index, GLuint divisor) \
 	GL_FUNC(void,   glEnableVertexAttribArray, GLuint index) \
-	GL_FUNC(void,   glEnable,           GLenum cap) \
-	GL_FUNC(void,   glDisable,          GLenum cap) \
-	GL_FUNC(void,   glDepthFunc,        GLenum func) \
-	GL_FUNC(void,   glBlendFunc,        GLenum sfactor, GLenum dfactor) \
-	GL_FUNC(void,   glDrawArrays,       GLenum mode, GLint first, GLsizei count) \
-	GL_FUNC(void,   glDrawArraysInstanced, GLenum mode, GLint first, GLsizei count, GLsizei primcount) \
-	GL_FUNC(void,   glDrawElements,     GLenum mode, GLsizei count, GLenum type, const GLvoid *indices) \
-	GL_FUNC(void,   glDrawElementsInstanced, GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, \
-		GLsizei primcount) \
-	GL_FUNC(void,   glGenTextures,      GLsizei n, GLuint *textures) \
-	GL_FUNC(void,   glDeleteTextures,   GLsizei n, const GLuint *textures) \
-	GL_FUNC(void,   glBindTexture,      GLenum target, GLuint texture) \
-	GL_FUNC(void,   glTexImage2D,       GLenum target, GLint level, GLint internalFormat, GLsizei width, \
-		GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid *data) \
-	GL_FUNC(void,   glTexSubImage2D,    GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid* data) \
-	GL_FUNC(void,   glTexParameteri,    GLenum target, GLenum pname, GLint param) \
-	GL_FUNC(void,   glActiveTexture,    GLenum texture) \
+	GL_FUNC(void,   glEnable,                  GLenum cap) \
+	GL_FUNC(void,   glDisable,                 GLenum cap) \
+	GL_FUNC(void,   glDepthFunc,               GLenum func) \
+	GL_FUNC(void,   glBlendFunc,               GLenum sfactor, GLenum dfactor) \
+	GL_FUNC(void,   glDrawArrays,              GLenum mode, GLint first, GLsizei count) \
+	GL_FUNC(void,   glDrawArraysInstanced,     GLenum mode, GLint first, GLsizei count, GLsizei primcount) \
+	GL_FUNC(void,   glDrawElements,            GLenum mode, GLsizei count, GLenum type, const GLvoid *indices) \
+	GL_FUNC(void,   glDrawElementsInstanced,   GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLsizei primcount) \
+	GL_FUNC(void,   glGenTextures,             GLsizei n, GLuint *textures) \
+	GL_FUNC(void,   glDeleteTextures,          GLsizei n, const GLuint *textures) \
+	GL_FUNC(void,   glBindTexture,             GLenum target, GLuint texture) \
+	GL_FUNC(void,   glTexImage2D,              GLenum target, GLint level, GLint internalFormat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid *data) \
+	GL_FUNC(void,   glTexSubImage2D,           GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid* data) \
+	GL_FUNC(void,   glTexParameteri,           GLenum target, GLenum pname, GLint param) \
+	GL_FUNC(void,   glActiveTexture,           GLenum texture) \
 	GL_FUNC(GLenum, glGetError) \
 	/* end function list */
 
