@@ -35,7 +35,7 @@ static inline v2 lerp(v2 start, v2 end, f32 weight)
 
 static inline f32 clamp(f32 val, f32 low, f32 high)
 {
-	return min(max(low, val), high);
+	return min_f32(max_f32(low, val), high);
 }
 
 static inline f32 dot(v2 a, v2 b)
@@ -63,7 +63,7 @@ struct m2
 	}
 };
 
-v2 operator*(m2 m, v2 v)
+static v2 operator*(m2 m, v2 v)
 {
 	return V2_f32(m._00 * v.x + m._10 * v.y, m._01 * v.x + m._11 * v.y);
 }
@@ -94,7 +94,7 @@ struct Rational
 	}
 };
 
-bool operator>(Rational a, Rational b)
+static bool operator>(Rational a, Rational b)
 {
 	i32 denominator = a.denominator * b.denominator;
 	bool result = a.numerator * b.denominator > b.numerator * a.denominator;
@@ -104,7 +104,7 @@ bool operator>(Rational a, Rational b)
 	return result;
 }
 
-bool operator>=(Rational a, Rational b)
+static bool operator>=(Rational a, Rational b)
 {
 	i32 denominator = a.denominator * b.denominator;
 	bool result = a.numerator * b.denominator >= b.numerator * a.denominator;
@@ -114,7 +114,7 @@ bool operator>=(Rational a, Rational b)
 	return result;
 }
 
-bool operator<(Rational a, Rational b)
+static bool operator<(Rational a, Rational b)
 {
 	i32 denominator = a.denominator * b.denominator;
 	bool result = a.numerator * b.denominator < b.numerator * a.denominator;
@@ -124,7 +124,7 @@ bool operator<(Rational a, Rational b)
 	return result;
 }
 
-bool operator<=(Rational a, Rational b)
+static bool operator<=(Rational a, Rational b)
 {
 	i32 denominator = a.denominator * b.denominator;
 	bool result = a.numerator * b.denominator <= b.numerator * a.denominator;

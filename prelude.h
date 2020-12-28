@@ -246,6 +246,14 @@ VEC_TYPES
 	inline void operator*=(v4_##type& a, type b) \
 	{ \
 		a = a * b; \
+	} \
+	inline void operator/=(v2_##type& a, v2_##type b) \
+	{ \
+		a = a / b; \
+	} \
+	inline void operator/=(v2_##type& a, type b) \
+	{ \
+		a = a / b; \
 	}
 VEC_TYPES
 #undef VEC_TYPE
