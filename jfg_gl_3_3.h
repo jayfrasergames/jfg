@@ -78,6 +78,13 @@ typedef i32 GLintptr;
 #define GL_SRC_ALPHA           0x0302
 #define GL_ONE_MINUS_SRC_ALPHA 0x0303
 
+#define GL_BLEND_EQUATION                       0x8009
+#define GL_MIN                                  0x8007
+#define GL_MAX                                  0x8008
+#define GL_FUNC_ADD                             0x8006
+#define GL_FUNC_SUBTRACT                        0x800A
+#define GL_FUNC_REVERSE_SUBTRACT                0x800B
+
 #define GL_GREATER 0x0204
 
 #define GL_DEPTH_BUFFER_BIT 0x00000100
@@ -141,6 +148,7 @@ typedef i32 GLintptr;
 	GL_FUNC(void,   glDisable,                 GLenum cap) \
 	GL_FUNC(void,   glDepthFunc,               GLenum func) \
 	GL_FUNC(void,   glBlendFunc,               GLenum sfactor, GLenum dfactor) \
+	GL_FUNC(void,   glBlendEquation,           GLenum mode) \
 	GL_FUNC(void,   glDrawArrays,              GLenum mode, GLint first, GLsizei count) \
 	GL_FUNC(void,   glDrawArraysInstanced,     GLenum mode, GLint first, GLsizei count, GLsizei primcount) \
 	GL_FUNC(void,   glDrawElements,            GLenum mode, GLsizei count, GLenum type, const GLvoid *indices) \
