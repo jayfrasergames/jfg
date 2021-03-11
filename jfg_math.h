@@ -38,6 +38,20 @@ static inline f32 clamp(f32 val, f32 low, f32 high)
 	return min_f32(max_f32(low, val), high);
 }
 
+static inline v2 clamp(v2 val, v2 low, v2 high)
+{
+	v2 result;
+	result.x = clamp(val.x, low.x, high.x);
+	result.y = clamp(val.y, low.y, high.y);
+	return result;
+}
+
+static inline f32 smoothstep(f32 x)
+{
+	x = clamp(x, 0, 1);
+	return x * x * (3.0f - 2.0f * x);
+}
+
 static inline f32 dot(v2 a, v2 b)
 {
 	return a.x * b.x + a.y * b.y;
