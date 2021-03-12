@@ -76,6 +76,14 @@ struct Max_Length_Array
 			items[i] = items[i + 1];
 		}
 	}
+	void reverse()
+	{
+		for (u32 i = 0, j = len - 1; i < j; ++i, --j) {
+			T tmp = items[i];
+			items[i] = items[j];
+			items[j] = tmp;
+		}
+	}
 	Slice<T> slice(u32 start, u32 length)
 	{
 		ASSERT(start + length < len);
